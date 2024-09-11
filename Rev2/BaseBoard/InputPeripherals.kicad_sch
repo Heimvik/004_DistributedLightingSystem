@@ -7150,7 +7150,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "c75debbc-caae-4a2f-a438-843f211d8d5f")
-		(property "Reference" "PB_1"
+		(property "Reference" "PB1"
 			(at 41.91 86.3599 90)
 			(effects
 				(font
@@ -7204,7 +7204,7 @@
 		(instances
 			(project "BaseBoard"
 				(path "/5772fade-5f5a-4b33-b088-e12fff8be0e3/5c7a8f5b-ceaf-4fe8-9c69-7311132cd264"
-					(reference "PB_1")
+					(reference "PB1")
 					(unit 1)
 				)
 			)
@@ -7894,7 +7894,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "f514dc3a-b576-4113-b5d0-2a09ebff1777")
-		(property "Reference" "PB_0"
+		(property "Reference" "PB0"
 			(at 85.09 86.3599 90)
 			(effects
 				(font
@@ -7948,7 +7948,7 @@
 		(instances
 			(project ""
 				(path "/5772fade-5f5a-4b33-b088-e12fff8be0e3/5c7a8f5b-ceaf-4fe8-9c69-7311132cd264"
-					(reference "PB_0")
+					(reference "PB0")
 					(unit 1)
 				)
 			)
