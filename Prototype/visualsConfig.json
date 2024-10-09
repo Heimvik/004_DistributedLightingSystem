@@ -1,0 +1,24 @@
+{
+    "led_bars": [
+        {
+            "id": "bar 1",
+            "number_of_leds": 30,
+            "alignment": "horizontal",
+            "position": {
+                "x": -100,
+                "y": 0,
+                "z": 0
+            }
+        },
+        {
+            "id": "bar_2",
+            "number_of_leds": 50,
+            "alignment": "vertical",
+            "position": {
+                "x": 100,
+                "y": 0,
+                "z": 50
+            }
+        }
+    ]
+}

@@ -1,9 +1,10 @@
 import subprocess
 import os
 
+#Already init in setup
 def setup_loopback_device():
     os.system("pactl load-module module-null-sink sink_name=loopback")
-    os.system("pactl load-module module-loopback sink=loopback")
+    os.system("pactl load-module module-loopback sink=loopback") 
 
 def run_librespot():
     subprocess.Popen(["librespot", "--name", "MyPi"])

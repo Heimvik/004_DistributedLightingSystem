@@ -21,6 +21,8 @@ source $HOME/.cargo/env
 # Clone librespot repository and build it
 git clone https://github.com/librespot-org/librespot.git
 cd librespot
+sudo apt install pkg-config
+sudo apt install libasound2-dev
 cargo build --release
 cd ..
 
