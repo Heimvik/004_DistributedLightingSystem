@@ -28,6 +28,8 @@ fi
 
 cd librespot
 cargo build --release
+echo "Starting librespot as a Spotify Connect device..."
+./target/release/librespot --name "PLserver" &
 cd ..
 
 # Install Python libraries from requirements.txt
@@ -62,3 +64,5 @@ echo "Available sinks after setup:"
 pactl list short sinks
 
 echo "Setup completed successfully! Your Raspberry Pi will now output audio to both the 3.5mm jack and loopback for FFT processing."
+
+echo "Starting PLserver..."

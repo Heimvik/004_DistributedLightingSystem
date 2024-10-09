@@ -11,7 +11,7 @@ CHUNK = 1024  # Number of samples per chunk (small enough for real-time processi
 LOOPBACK_DEVICE_NAME = 'loopback'
 
 # Function to perform FFT and plot it
-def process_audio_data(data):
+def processAudioData(data):
     audioData = np.frombuffer(data, dtype=np.int16)
     
     fftResult = np.fft.fft(audioData[::2])  # Use every second sample for left channel
@@ -26,7 +26,7 @@ def process_audio_data(data):
         print(f"{i:03d}: {bar}")
 
 # Function to read from the loopback stream
-def audio_stream_reader():
+def runDsp():
     p = pyaudio.PyAudio()
 
     loopbackDeviceIndex = None
@@ -51,7 +51,7 @@ def audio_stream_reader():
     try:
         while True:
             data = stream.read(CHUNK, exception_on_overflow=False)
-            process_audio_data(data)
+            processAudioData(data)
 
     except KeyboardInterrupt:
         print("\nStopping audio stream...")
@@ -59,7 +59,7 @@ def audio_stream_reader():
         stream.close()
         p.terminate()
 
-def initAudioProcessing():
-    streamThread = threading.Thread(target=audio_stream_reader)
-    streamThread.start()
-    return streamThread
+def runDspThread():
+    dspThread = threading.Thread(target=runDsp)
+    dspThread.start()
+    return dspThread
