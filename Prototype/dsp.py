@@ -8,16 +8,17 @@ FORMAT = pyaudio.paInt16  # 16-bit audio format
 CHANNELS = 2  # Stereo audio
 RATE = 44100  # Sample rate (44.1 kHz)
 CHUNK = 1024  # Number of samples per chunk (small enough for real-time processing)
-LOOPBACK_DEVICE_NAME = 'loopback'
+LOOPBACK_DEVICE_NAME = 'loopback.monitor'  # Update to include ".monitor"
 
 # Function to perform FFT and plot it
 def processAudioData(data):
     audioData = np.frombuffer(data, dtype=np.int16)
-    
+
+    # Take FFT only for the left channel (assuming stereo)
     fftResult = np.fft.fft(audioData[::2])  # Use every second sample for left channel
     fftMagnitude = np.abs(fftResult)[:CHUNK // 2]  # Take magnitude of FFT and limit to half
 
-    fftMagnitude = fftMagnitude / np.max(fftMagnitude)
+    fftMagnitude = fftMagnitude / np.max(fftMagnitude)  # Normalize
 
     print("\033[H\033[J")  # ANSI escape code to clear the terminal screen
 
