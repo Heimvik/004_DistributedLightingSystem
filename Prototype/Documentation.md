@@ -1,5 +1,11 @@
 # DSP prototype
 
+## Server credentails
+For the dsp server, the following credentials are used:
+- username: heimvik
+- ip: 192.168.0.134
+Password is known.
+
 ## Requirements
 The following requirements must be met.
 1. First do:
@@ -9,7 +15,7 @@ sudo apt install build-essential libasound2-dev
 git clone https://github.com/librespot-org/librespot.git
 cd librespot
 cargo build --release
-./target/release/librespot --name "MyPi"
+./target/release/librespot --name "PLserver"
 ```
 for the spotify librespot client.
 
@@ -43,3 +49,8 @@ pactl load-module module-loopback sink=loopback
 ```
 
 That should be all the requirements.
+
+Make sure the GUI is turned off, improving performance. Done by:
+```cmd
+sudo systemctl set-default multi-user.target
+```
