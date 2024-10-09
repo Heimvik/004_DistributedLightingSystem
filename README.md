@@ -12,3 +12,6 @@ The Distributed LED System is a networked lighting project using ESP32 microcont
   - Spatial Sound Effects
 - **Real-time Communication**: Efficiently communicates between master and slave nodes using MQTT/WebSockets.
 - **User Interface**: Web-based or mobile app interface for control and configuration.
+
+
+Status as of 09.10: Awaiting programmer for ESP32-WROOM32E, continuing prototyping with rpi.
