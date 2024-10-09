@@ -1,48 +1,65 @@
 import pyaudio
 import numpy as np
 import matplotlib.pyplot as plt
-import ctypes
-import time
+import threading
 
-# Load the GPU FFT shared library
-gpuFft = ctypes.CDLL('./gpuFft/gpuFftInterface.so')
+# PyAudio configuration
+FORMAT = pyaudio.paInt16  # 16-bit audio format
+CHANNELS = 2  # Stereo audio
+RATE = 44100  # Sample rate (44.1 kHz)
+CHUNK = 1024  # Number of samples per chunk (small enough for real-time processing)
+LOOPBACK_DEVICE_NAME = 'loopback'
 
-FORMAT = pyaudio.paInt16
-CHANNELS = 1  # Future 2 channel?
-RATE = 44100
-CHUNK = 1024
+# Function to perform FFT and plot it
+def process_audio_data(data):
+    audioData = np.frombuffer(data, dtype=np.int16)
+    
+    fftResult = np.fft.fft(audioData[::2])  # Use every second sample for left channel
+    fftMagnitude = np.abs(fftResult)[:CHUNK // 2]  # Take magnitude of FFT and limit to half
 
-p = pyaudio.PyAudio()
+    fftMagnitude = fftMagnitude / np.max(fftMagnitude)
 
-deviceIndex = None  # Check if correct, none is apperently default
-stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK, input_device_index=device_index)
+    print("\033[H\033[J")  # ANSI escape code to clear the terminal screen
 
-fig, ax = plt.subplots()
-x = np.arange(0, CHUNK // 2) 
-line, = ax.plot(x, np.random.rand(CHUNK // 2))
-plt.show(block=False)
+    for i, value in enumerate(fftMagnitude):
+        bar = "#" * int(value * 50)  # Scale the bar length by 50 for visualization
+        print(f"{i:03d}: {bar}")
 
-try:
-    while True:
-        data = stream.read(CHUNK)
-        audio_data = np.frombuffer(data, dtype=np.int16).astype(np.float32)
+# Function to read from the loopback stream
+def audio_stream_reader():
+    p = pyaudio.PyAudio()
 
-        # Make data compatible with c types
-        input_ctypes = audio_data.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
-        output_data = np.zeros(CHUNK, dtype=np.float32)
-        output_ctypes = output_data.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
+    loopbackDeviceIndex = None
+    for i in range(p.get_device_count()):
+        deviceInfo = p.get_device_info_by_index(i)
+        if LOOPBACK_DEVICE_NAME in deviceInfo['name']:
+            loopbackDeviceIndex = i
+            break
+    
+    if loopbackDeviceIndex is None:
+        raise RuntimeError(f"Loopback device named '{LOOPBACK_DEVICE_NAME}' not found.")
+    
+    stream = p.open(format=FORMAT,
+                    channels=CHANNELS,
+                    rate=RATE,
+                    input=True,
+                    input_device_index=loopbackDeviceIndex,
+                    frames_per_buffer=CHUNK)
 
-        gpuFft.run_gpu_fft(input_ctypes, CHUNK, output_ctypes)
+    print(f"Reading audio from {LOOPBACK_DEVICE_NAME}...")
 
-        # Update the plot with the FFT result
-        line.set_ydata(np.abs(output_data[:CHUNK // 2]))
-        ax.relim()
-        ax.autoscale_view(True, True, True)
-        fig.canvas.draw()
-        fig.canvas.flush_events()
-except KeyboardInterrupt:
-    print("Stopping...")
-finally:
-    stream.stop_stream()
-    stream.close()
-    p.terminate()
+    try:
+        while True:
+            data = stream.read(CHUNK, exception_on_overflow=False)
+            process_audio_data(data)
+
+    except KeyboardInterrupt:
+        print("\nStopping audio stream...")
+        stream.stop_stream()
+        stream.close()
+        p.terminate()
+
+def initAudioProcessing():
+    streamThread = threading.Thread(target=audio_stream_reader)
+    streamThread.start()
+    return streamThread
