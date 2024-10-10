@@ -1,4 +1,0 @@
-pyaudio
-matplotlib
-numpy
-rpi_ws281x

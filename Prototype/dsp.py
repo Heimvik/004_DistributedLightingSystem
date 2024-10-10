@@ -8,7 +8,7 @@ FORMAT = pyaudio.paInt16  # 16-bit audio format
 CHANNELS = 2  # Stereo audio
 RATE = 44100  # Sample rate (44.1 kHz)
 CHUNK = 1024  # Number of samples per chunk (small enough for real-time processing)
-LOOPBACK_DEVICE_NAME = 'loopback'
+LOOPBACK_DEVICE_NAME = 'loopback.monitor'
 
 # Function to perform FFT and plot it
 def process_audio_data(data):
@@ -28,6 +28,14 @@ def process_audio_data(data):
 # Function to read from the loopback stream
 def audio_stream_reader():
     p = pyaudio.PyAudio()
+
+    loopbackDeviceIndices = []
+    for i in range(p.get_device_count()):
+        deviceInfo = p.get_device_info_by_index(i)
+        if LOOPBACK_DEVICE_NAME in deviceInfo['name']:
+            loopbackDeviceIndices.append(i)
+
+    print("Available loopback devices:", loopbackDeviceIndices)
 
     loopbackDeviceIndex = None
     for i in range(p.get_device_count()):
