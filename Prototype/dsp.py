@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import time
 
-# Define parameters
+## Define parameters
 fs = 44100  # Sample rate
 buffer_size = 1024  # Number of audio samples to read in each iteration
 num_buffers = 50  # Number of buffers to keep for the spectrogram
@@ -13,7 +13,7 @@ num_buffers = 50  # Number of buffers to keep for the spectrogram
 fft_times = []
 
 # Function to print average computation time every 5 seconds
-def print_performance():
+def print_average_time():
     while True:
         time.sleep(5)  # Wait for 5 seconds
         if fft_times:
@@ -22,10 +22,7 @@ def print_performance():
             fft_times.clear()  # Clear the list for the next interval
 
 # Function to run audio visualization
-def run_audio_visualization():
-    # Initialize an empty array for audio data
-    audio_data = np.zeros(buffer_size)
-
+def run_audio_visualization(audio_data):
     # Create a figure for the plot
     fig, ax = plt.subplots()
     x = np.linspace(0, buffer_size / fs, buffer_size)  # Time axis
@@ -37,25 +34,15 @@ def run_audio_visualization():
     ax.set_ylabel('Amplitude')
     ax.grid()
 
-    # Callback function to update audio data
-    def audio_callback(indata, frames, time, status):
-        if status:
-            print(status)
-        nonlocal audio_data
-        audio_data = indata[:, 0]  # Get the first channel
-
-    # Create an audio stream
-    stream = sd.InputStream(callback=audio_callback, channels=1, samplerate=fs, blocksize=buffer_size)
-
     # Animation function
     def update(frame):
-        line.set_ydata(audio_data)
+        line.set_ydata(audio_data[0])  # Access the first element to get the audio data
         return line,
 
-    # Start the audio stream and animation
-    with stream:
-        ani = FuncAnimation(fig, update, blit=True)
-        plt.show()
+    # Animation
+    ani = FuncAnimation(fig, update, blit=True)
+
+    plt.show()  # Move plt.show() to the main thread
 
 # Function to run spectrogram visualization
 def run_spectrogram_visualization():
@@ -78,10 +65,10 @@ def run_spectrogram_visualization():
         audio_buffers[-1] = indata[:, 0]  # Add new data to the last buffer
 
         # Compute the FFT for the current buffer
-        start_time = time.clock()  # Start time for FFT computation
+        start_time = time.time()  # Start time for FFT computation
         fft_data = np.fft.fft(audio_buffers[-1])
         magnitude = np.abs(fft_data[:buffer_size // 2])  # Take only the positive frequencies
-        fft_time = time.clock() - start_time  # Compute elapsed time
+        fft_time = time.time() - start_time  # Compute elapsed time
         fft_times.append(fft_time)  # Store computation time
 
         # Update the spectrogram data
@@ -91,7 +78,7 @@ def run_spectrogram_visualization():
     # Create an audio stream
     stream = sd.InputStream(callback=audio_callback, channels=1, samplerate=fs, blocksize=buffer_size)
 
-    # Start the audio stream and display the spectrogram
+    # Start the audio stream
     with stream:
         plt.colorbar(im, ax=ax)
         plt.show()

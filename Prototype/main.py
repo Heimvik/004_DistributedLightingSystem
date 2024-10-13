@@ -12,16 +12,14 @@ def main():
     librespot_thread.start()
 
     # Start the audio visualization in another separate thread
-    visualization_thread = threading.Thread(target=run_spectrogram_visualization)
-    visualization_thread.start()
+    #visualization_thread = threading.Thread(target=run_spectrogram_visualization)
+    #visualization_thread.start()
 
-    performance_thread = threading.Thread(target=print_performance)
-    performance_thread.daemon = True  # Daemon thread will exit when the main program exits
-    performance_thread.start()
+    run_spectrogram_visualization()
 
     # Optional: Wait for both threads to finish (if needed)
     librespot_thread.join()
-    visualization_thread.join()
+    #visualization_thread.join()
 
 
 if __name__ == "__main__":
