@@ -44,41 +44,37 @@ def run_audio_visualization(audio_data):
 
     plt.show()  # Move plt.show() to the main thread
 
-# Function to run spectrogram visualization
-def run_spectrogram_visualization():
-    # Initialize an empty array to store audio data for the spectrogram
-    audio_buffers = np.zeros((num_buffers, buffer_size))
-
-    # Create a figure for the spectrogram
+# Function to run FFT visualization
+def run_fft_visualization():
+    # Create a figure for the plot
     fig, ax = plt.subplots()
-    ax.set_title('Real-Time Audio Spectrogram')
-    ax.set_xlabel('Time [s]')
-    ax.set_ylabel('Frequency [Hz]')
-    extent = (0, num_buffers * (buffer_size / fs), 0, fs / 2)
-    im = ax.imshow(np.zeros((fs // 2, num_buffers)), aspect='auto', extent=extent, origin='lower', cmap='inferno')
+    freqs = np.fft.rfftfreq(buffer_size, d=1/fs)  # Frequency axis
+    line, = ax.plot(freqs, np.zeros(len(freqs)), color='blue')
+    ax.set_ylim(0, 1)  # Set y-axis limits for magnitude
+    ax.set_xlim(0, fs / 2)  # Set x-axis limits for frequency
+    ax.set_title('Real-Time Audio FFT')
+    ax.set_xlabel('Frequency [Hz]')
+    ax.set_ylabel('Magnitude')
+    ax.grid()
 
-    # Callback function to update audio buffers for the spectrogram
+    # Callback function to update the FFT plot
     def audio_callback(indata, frames, time, status):
         if status:
             print(status)
-        audio_buffers[:-1] = audio_buffers[1:]  # Shift buffers
-        audio_buffers[-1] = indata[:, 0]  # Add new data to the last buffer
 
-        # Compute the FFT for the current buffer
-        ##start_time = time.time()  # Start time for FFT computation
-        fft_data = np.fft.fft(audio_buffers[-1])
+        # Compute the FFT for the incoming audio data
+        fft_data = np.fft.fft(indata[:, 0])
         magnitude = np.abs(fft_data[:buffer_size // 2])  # Take only the positive frequencies
-        ##fft_time = time.time() - start_time  # Compute elapsed time
-        ##fft_times.append(fft_time)  # Store computation time
 
-        # Update the spectrogram data
-        im.set_array(np.roll(im.get_array(), -1, axis=1))  # Shift the spectrogram left
-        im.get_array()[:, -1] = magnitude  # Add new magnitude data to the right
+        # Update the FFT plot
+        line.set_ydata(magnitude)  # Update the line with the new FFT data
+        return line,
 
     # Create an audio stream
     stream = sd.InputStream(callback=audio_callback, channels=1, samplerate=fs, blocksize=buffer_size)
 
     # Start the audio stream
     with stream:
-        plt.colorbar(im, ax=ax)
-        plt.show()
+        # Start the animation
+        ani = FuncAnimation(fig, lambda frame: audio_callback(None, None, None, None), blit=True)
+        plt.show()  # Show the plot

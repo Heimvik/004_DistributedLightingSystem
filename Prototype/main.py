@@ -1,4 +1,4 @@
-from dsp import run_audio_visualization, run_spectrogram_visualization
+from dsp import run_audio_visualization, run_fft_visualization
 import subprocess
 import threading
 
@@ -15,7 +15,7 @@ def main():
     #visualization_thread = threading.Thread(target=run_spectrogram_visualization)
     #visualization_thread.start()
 
-    run_spectrogram_visualization()
+    run_fft_visualization()
 
     # Optional: Wait for both threads to finish (if needed)
     librespot_thread.join()
