@@ -1,4 +1,4 @@
-from dsp import run_audio_visualization,print_performance, run_spectrogram_visualization
+from dsp import run_audio_visualization, run_spectrogram_visualization
 import subprocess
 import threading
 
