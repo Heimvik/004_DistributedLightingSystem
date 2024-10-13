@@ -1,15 +1,48 @@
 import numpy as np
 import sounddevice as sd
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 import time
-import threading
 
-# Parameters
-fs = 44100  # Original sampling rate
+## Define parameters
+fs = 44100  # Sample rate
+buffer_size = 1024  # Number of audio samples to read in each iteration
+num_buffers = 50  # Number of buffers to keep for the spectrogram
 downsample_factor = 4  # Factor by which to downsample
-buffer_size = 1024  # Size of the audio buffer
+downsampled_fs = fs // downsample_factor  # New sample rate after downsampling
+fft_times = []
 
-# New downsampled sampling rate
-downsampled_fs = fs // downsample_factor
+# Function to print average computation time every 5 seconds
+def print_average_time():
+    while True:
+        time.sleep(5)  # Wait for 5 seconds
+        if fft_times:
+            average_time = sum(fft_times) / len(fft_times)
+            print(f"Average FFT computation time: {average_time:.6f} seconds")
+            fft_times.clear()  # Clear the list for the next interval
+
+# Function to run audio visualization
+def run_audio_visualization(audio_data):
+    # Create a figure for the plot
+    fig, ax = plt.subplots()
+    x = np.linspace(0, buffer_size / fs, buffer_size)  # Time axis
+    line, = ax.plot(x, audio_data, color='blue')
+    ax.set_ylim(-1, 1)  # Set y-axis limits for amplitude
+    ax.set_xlim(0, buffer_size / fs)  # Set x-axis limits for time
+    ax.set_title('Real-Time Audio Waveform')
+    ax.set_xlabel('Time [s]')
+    ax.set_ylabel('Amplitude')
+    ax.grid()
+
+    # Animation function
+    def update(frame):
+        line.set_ydata(audio_data[0])  # Access the first element to get the audio data
+        return line,
+
+    # Animation
+    ani = FuncAnimation(fig, update, blit=True)
+
+    plt.show()  # Move plt.show() to the main thread
 
 # Function to run FFT visualization
 def run_fft_visualization():
