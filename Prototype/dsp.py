@@ -9,7 +9,7 @@ fs = 44100  # Sample rate
 buffer_size = 1024  # Number of audio samples to read in each iteration
 num_buffers = 50  # Number of buffers to keep for the spectrogram
 downsample_factor = 4  # Factor by which to downsample
-# Global variable to keep track of FFT computation times
+downsampled_fs = fs // downsample_factor  # New sample rate after downsampling
 fft_times = []
 
 # Function to print average computation time every 5 seconds
@@ -60,10 +60,18 @@ def run_fft_visualization():
         fft_data = np.fft.fft(downsampled_data[:, 0], n=buffer_size // downsample_factor)
         magnitude = np.abs(fft_data[:(buffer_size // (2 * downsample_factor))])  # Take only the positive frequencies
 
-        # Get 16 evenly distributed frequency bins
+        # Create new frequency axis for downsampled signal
+        downsampled_freqs = np.fft.rfftfreq(buffer_size // downsample_factor, d=1/downsampled_fs)
+
+        # Get 16 evenly distributed frequency bins that are below the new Nyquist frequency
+        nyquist_frequency = downsampled_fs / 2  # New Nyquist frequency
         bin_indices = np.linspace(0, len(magnitude) - 1, 16, dtype=int)
-        bin_magnitudes = magnitude[bin_indices]
-        bin_frequencies = freqs[bin_indices * downsample_factor]  # Adjust frequency calculation for downsampling
+        
+        # Ensure we only consider indices that correspond to frequencies below the Nyquist frequency
+        valid_bins = [i for i in bin_indices if downsampled_freqs[i] <= nyquist_frequency]
+        
+        bin_magnitudes = magnitude[valid_bins]
+        bin_frequencies = downsampled_freqs[valid_bins]
 
         # Print the frequency bins and their corresponding magnitudes
         print("\nFrequency Bins (Hz) and Magnitudes:")
