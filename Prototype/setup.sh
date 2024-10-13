@@ -47,7 +47,8 @@ pulseaudio --start
 
 # Load loopback and null sink modules
 pactl load-module module-null-sink sink_name=loopback || echo "Null sink already loaded"
-pactl load-module module-loopback sink=loopback || echo "Loopback module already loaded"
+pactl load-module module-loopback sink=loop
+back || echo "Loopback module already loaded"
 
 # Set default output to 3.5mm aux port
 echo "Setting the Raspberry Pi's 3.5mm jack as default audio output..."
@@ -62,3 +63,9 @@ echo "Available sinks after setup:"
 pactl list short sinks
 
 echo "Setup completed successfully! Your Raspberry Pi will now output audio to both the 3.5mm jack and loopback for FFT processing."
+
+#Forget the above, run this
+sudo modprobe snd-aloop
+
+#Check for loopback devices using 
+aplay-l

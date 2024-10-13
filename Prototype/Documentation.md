@@ -63,3 +63,10 @@ Make sure the GUI is turned off, improving performance. Done by:
 ```cmd
 sudo systemctl set-default multi-user.target
 ```
+
+# Note
+To rounte the sound to the external spotify server, run:
+
+./librespot/target/release/librespot --name "PLserver" --device default
+
+in ./Prototype !
