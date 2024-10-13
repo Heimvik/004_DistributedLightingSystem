@@ -1,4 +1,4 @@
-from dsp import run_audio_visualization,print_performance
+from dsp import run_audio_visualization,print_performance, run_spectrogram_visualization
 import subprocess
 import threading
 
@@ -12,7 +12,7 @@ def main():
     librespot_thread.start()
 
     # Start the audio visualization in another separate thread
-    visualization_thread = threading.Thread(target=run_audio_visualization)
+    visualization_thread = threading.Thread(target=run_spectrogram_visualization)
     visualization_thread.start()
 
     performance_thread = threading.Thread(target=print_performance)

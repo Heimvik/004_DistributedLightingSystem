@@ -78,10 +78,10 @@ def run_spectrogram_visualization():
         audio_buffers[-1] = indata[:, 0]  # Add new data to the last buffer
 
         # Compute the FFT for the current buffer
-        start_time = time.time()  # Start time for FFT computation
+        start_time = time.clock()  # Start time for FFT computation
         fft_data = np.fft.fft(audio_buffers[-1])
         magnitude = np.abs(fft_data[:buffer_size // 2])  # Take only the positive frequencies
-        fft_time = time.time() - start_time  # Compute elapsed time
+        fft_time = time.clock() - start_time  # Compute elapsed time
         fft_times.append(fft_time)  # Store computation time
 
         # Update the spectrogram data
