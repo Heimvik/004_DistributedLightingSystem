@@ -68,7 +68,7 @@ def run_fft_visualization():
         nyquist_frequency = downsampled_fs / 2  
 
         # Define frequency bins starting from 30 Hz in logarithmic scale
-        log_bins = np.array([30, 60, 120, 240, 480, 960, 1920, 3840, 7680, 15360])
+        log_bins = np.array([30, 60, 120, 240, 480, 960, 1920, 3840, 5000])
 
         # Ensure we only consider frequencies below the Nyquist frequency
         valid_bins = [freq for freq in log_bins if freq < nyquist_frequency]
@@ -79,6 +79,7 @@ def run_fft_visualization():
         # Get magnitudes for the selected frequency bins
         bin_magnitudes = magnitude[bin_indices]
 
+        #TODO: Put in function that takes in the param        
         # Print the magnitudes for the selected frequency bins
         print("\r", end='')  # Carriage return to overwrite the line
         for mag in bin_magnitudes:
