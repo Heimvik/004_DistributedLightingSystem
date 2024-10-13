@@ -8,7 +8,7 @@ import time
 fs = 44100  # Sample rate
 buffer_size = 1024  # Number of audio samples to read in each iteration
 num_buffers = 50  # Number of buffers to keep for the spectrogram
-
+downsample_factor = 4  # Factor by which to downsample
 # Global variable to keep track of FFT computation times
 fft_times = []
 
@@ -43,7 +43,6 @@ def run_audio_visualization(audio_data):
     ani = FuncAnimation(fig, update, blit=True)
 
     plt.show()  # Move plt.show() to the main thread
-
 # Function to run FFT visualization
 def run_fft_visualization():
     # Create a figure for the plot
@@ -54,14 +53,17 @@ def run_fft_visualization():
         if status:
             print(status)
 
-        # Compute the FFT for the incoming audio data
-        fft_data = np.fft.fft(indata[:, 0])
-        magnitude = np.abs(fft_data[:buffer_size // 2])  # Take only the positive frequencies
+        # Downsample the incoming audio data by taking every 4th sample
+        downsampled_data = indata[::downsample_factor]
+
+        # Compute the FFT for the downsampled audio data
+        fft_data = np.fft.fft(downsampled_data[:, 0], n=buffer_size // downsample_factor)
+        magnitude = np.abs(fft_data[:(buffer_size // (2 * downsample_factor))])  # Take only the positive frequencies
 
         # Get 16 evenly distributed frequency bins
         bin_indices = np.linspace(0, len(magnitude) - 1, 16, dtype=int)
         bin_magnitudes = magnitude[bin_indices]
-        bin_frequencies = freqs[bin_indices]
+        bin_frequencies = freqs[bin_indices * downsample_factor]  # Adjust frequency calculation for downsampling
 
         # Print the frequency bins and their corresponding magnitudes
         print("\nFrequency Bins (Hz) and Magnitudes:")
