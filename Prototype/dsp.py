@@ -68,13 +68,12 @@ def run_fft_visualization():
 
         # Update the FFT plot
         line.set_ydata(magnitude)  # Update the line with the new FFT data
-        return line,
+        fig.canvas.draw()  # Redraw the figure
+        fig.canvas.flush_events()  # Ensure that the events are processed
 
     # Create an audio stream
     stream = sd.InputStream(callback=audio_callback, channels=1, samplerate=fs, blocksize=buffer_size)
 
     # Start the audio stream
     with stream:
-        # Start the animation
-        ani = FuncAnimation(fig, lambda frame: audio_callback(None, None, None, None), blit=True)
         plt.show()  # Show the plot
