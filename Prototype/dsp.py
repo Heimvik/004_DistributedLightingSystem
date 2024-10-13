@@ -47,17 +47,9 @@ def run_audio_visualization(audio_data):
 # Function to run FFT visualization
 def run_fft_visualization():
     # Create a figure for the plot
-    fig, ax = plt.subplots()
     freqs = np.fft.rfftfreq(buffer_size, d=1/fs)  # Frequency axis
-    line, = ax.plot(freqs, np.zeros(len(freqs)), color='blue')
-    ax.set_ylim(0, 1)  # Set y-axis limits for magnitude
-    ax.set_xlim(0, fs / 2)  # Set x-axis limits for frequency
-    ax.set_title('Real-Time Audio FFT')
-    ax.set_xlabel('Frequency [Hz]')
-    ax.set_ylabel('Magnitude')
-    ax.grid()
 
-    # Callback function to update the FFT plot
+    # Callback function to update the FFT printout
     def audio_callback(indata, frames, time, status):
         if status:
             print(status)
@@ -66,14 +58,25 @@ def run_fft_visualization():
         fft_data = np.fft.fft(indata[:, 0])
         magnitude = np.abs(fft_data[:buffer_size // 2])  # Take only the positive frequencies
 
-        # Update the FFT plot
-        line.set_ydata(magnitude)  # Update the line with the new FFT data
-        fig.canvas.draw()  # Redraw the figure
-        fig.canvas.flush_events()  # Ensure that the events are processed
+        # Get 16 evenly distributed frequency bins
+        bin_indices = np.linspace(0, len(magnitude) - 1, 16, dtype=int)
+        bin_magnitudes = magnitude[bin_indices]
+        bin_frequencies = freqs[bin_indices]
+
+        # Print the frequency bins and their corresponding magnitudes
+        print("\nFrequency Bins (Hz) and Magnitudes:")
+        print("-------------------------------------------------")
+        print(f"{'Frequency (Hz)':<20} {'Magnitude':<20}")
+        print("-------------------------------------------------")
+        for freq, mag in zip(bin_frequencies, bin_magnitudes):
+            print(f"{freq:<20.2f} {mag:<20.2f}")
+        print("-------------------------------------------------")
 
     # Create an audio stream
     stream = sd.InputStream(callback=audio_callback, channels=1, samplerate=fs, blocksize=buffer_size)
 
     # Start the audio stream
     with stream:
-        plt.show()  # Show the plot
+        print("Listening... Press Ctrl+C to stop.")
+        while True:
+            time.sleep(1)  # Keep the stream alive
