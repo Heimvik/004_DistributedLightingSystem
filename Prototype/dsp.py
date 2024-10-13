@@ -64,22 +64,25 @@ def run_fft_visualization():
         # Create new frequency axis for downsampled signal
         downsampled_freqs = np.fft.rfftfreq(buffer_size // downsample_factor, d=1/downsampled_fs)
 
-        # Define the logarithmic frequency bins starting from 30 Hz
-        start_freq = 30  # Starting frequency
-        max_freq = downsampled_fs / 2  # New Nyquist frequency
-        log_bins = np.logspace(np.log10(start_freq), np.log10(max_freq), 16).astype(int)
+        # New Nyquist frequency after downsampling
+        nyquist_frequency = downsampled_fs / 2  
 
-        # Filter out invalid frequency indices that exceed the FFT size
-        log_bins = [i for i in log_bins if i < len(magnitude)]
+        # Define frequency bins starting from 30 Hz in logarithmic scale
+        log_bins = np.array([30, 60, 120, 240, 480, 960, 1920, 3840, 7680, 15360])
 
-        # Get magnitudes for the selected logarithmic frequency bins
-        bin_magnitudes = magnitude[log_bins]
-        bin_frequencies = downsampled_freqs[log_bins]
+        # Ensure we only consider frequencies below the Nyquist frequency
+        valid_bins = [freq for freq in log_bins if freq < nyquist_frequency]
 
-        # Print the frequencies and their corresponding magnitudes
+        # Get the corresponding indices for valid frequency bins
+        bin_indices = [np.argmin(np.abs(downsampled_freqs - freq)) for freq in valid_bins]
+
+        # Get magnitudes for the selected frequency bins
+        bin_magnitudes = magnitude[bin_indices]
+
+        # Print the magnitudes for the selected frequency bins
         print("\r", end='')  # Carriage return to overwrite the line
-        for freq, mag in zip(bin_frequencies, bin_magnitudes):
-            print(f"{freq:<20.2f}", end=' ')
+        for mag in bin_magnitudes:
+            print(f"{mag:<20.2f}", end=' ')
         print()  # Newline for the next row
 
     # Create an audio stream
