@@ -1,16 +1,13 @@
-{
-    "led_bars": [
-        {
-            "id": "0",
-            "number_of_leds": 144,
-            "pin":32,
-            "dma_channel":0,
-            "alignment": "vertical",
-            "position": {
-                "x": -100,
-                "y": 0,
-                "z": 0
-            }
+[
+    {
+        "id": 0,
+        "number_of_leds": 144,
+        "pin": 32,
+        "alignment": "vertical",
+        "position": {
+            "x": -100,
+            "y": 0,
+            "z": 0
         }
-    ]
-}
+    }
+]

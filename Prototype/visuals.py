@@ -12,13 +12,28 @@ current_ma = {}
 def load_led_bars_config(file_path):
     try:
         with open(file_path, 'r') as file:
-            config = json.load(file)
-        return config
+            config_list = json.load(file)
+        
+        # Check if the config is a list and contains objects with 'id'
+        if not isinstance(config_list, list):
+            raise ValueError("Config should be a list of LED bar configurations.")
+        
+        # Create a dictionary where the key is the 'id' of each configuration
+        config_dict = {config['id']: config for config in config_list}
+        
+        return config_dict
+
     except FileNotFoundError:
         print(f"Error: The file '{file_path}' was not found.")
         return {}
     except json.JSONDecodeError:
         print(f"Error: The file '{file_path}' is not a valid JSON.")
+        return {}
+    except KeyError:
+        print("Error: One of the LED bar configurations is missing an 'id'.")
+        return {}
+    except ValueError as e:
+        print(f"Error: {e}")
         return {}
     
 def init_bars(config):
