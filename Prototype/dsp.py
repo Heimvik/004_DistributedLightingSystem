@@ -47,7 +47,7 @@ def run_audio_visualization(audio_data):
 
 # Function to run FFT visualization
 def run_fft_visualization():
-    bars = init_bars(load_led_bars_config('led_bars_config.json'))
+    bars = init_bars(load_led_bars_config('visualsConfig.json'))
 
     # Create a figure for the plot
     freqs = np.fft.rfftfreq(buffer_size, d=1/fs)  # Frequency axis
