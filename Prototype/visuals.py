@@ -23,7 +23,7 @@ def load_led_bars_config(file_path):
 
         # Assign each configuration to the correct index in the list
         for config in config_list:
-        config_lst[config['id']] = config
+            config_lst[config['id']] = config
         
         return config_lst
 
