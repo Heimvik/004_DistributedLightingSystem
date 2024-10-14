@@ -1,7 +1,5 @@
 import numpy as np
 import sounddevice as sd
-import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
 import time
 #from visuals import init_bars,load_led_bars_config,set_brightness_and_color
 
