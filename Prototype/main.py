@@ -1,3 +1,5 @@
+
+from visuals import init_bars
 from dsp import run_audio_visualization, run_fft_visualization
 import subprocess
 import threading
