@@ -18,8 +18,12 @@ def load_led_bars_config(file_path):
         if not isinstance(config_list, list):
             raise ValueError("Config should be a list of LED bar configurations.")
         
-        # Create a dictionary where the key is the 'id' of each configuration
-        config_lst = [config['id']: config for config in config_list]
+        max_id = max(config['id'] for config in config_list)
+        config_lst = [None] * (max_id + 1)  # Create a list of Nones with length equal to max_id + 1
+
+        # Assign each configuration to the correct index in the list
+        for config in config_list:
+        config_lst[config['id']] = config
         
         return config_lst
 
