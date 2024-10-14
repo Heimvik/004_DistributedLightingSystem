@@ -1,5 +1,5 @@
 import time
-import rpi_ws281x
+from rpi_ws281x import PixelStrip, Color, setPixelColor, setBrightness, show
 import json
 
 LED_FREQ = 800000
