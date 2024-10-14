@@ -1,5 +1,5 @@
 
-from dsp import run_audio_visualization, run_fft_visualization
+from dsp import run_fft_visualization
 import subprocess
 import threading
 
