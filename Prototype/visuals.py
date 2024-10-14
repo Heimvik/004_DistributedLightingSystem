@@ -41,6 +41,7 @@ def load_led_bars_config(file_path):
         return {}
     
 def init_bars(config_lst):
+    print(config_lst)
     bars = []
     iter = 0
     for config in config_lst:
