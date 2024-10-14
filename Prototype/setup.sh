@@ -69,3 +69,6 @@ sudo modprobe snd-aloop
 
 #Check for loopback devices using 
 aplay-l
+
+#Check for default device using
+python3 -c "import sounddevice as sd; print(sd.query_devices())"
