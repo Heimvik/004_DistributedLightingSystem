@@ -45,8 +45,9 @@ def init_bars(config_lst):
     bars = []
     iter = 0
     for config in config_lst:
-        bars[int(config.id)] = PixelStrip(config.number_of_leds, config.pin, LED_FREQ, DMA_CHANNEL, False, 255, config.pwm_channel)
-        bars[int(config.id)].begin()
+        if config:  # Make sure config is not None (in case there are gaps in IDs)
+            bars.append(PixelStrip(config['number_of_leds'], config['pin'], LED_FREQ, DMA_CHANNEL, False, 255, config['pwm_channel']))
+            bars[-1].begin()  # Begin for the latest added strip
     print("Bars initialized sucessfully!")
     return bars
 
