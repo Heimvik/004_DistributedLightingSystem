@@ -3,6 +3,7 @@
         "id": 0,
         "number_of_leds": 144,
         "pin": 32,
+        "pwm_channel": 0,
         "alignment": "vertical",
         "position": {
             "x": -100,

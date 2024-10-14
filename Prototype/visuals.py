@@ -19,9 +19,9 @@ def load_led_bars_config(file_path):
             raise ValueError("Config should be a list of LED bar configurations.")
         
         # Create a dictionary where the key is the 'id' of each configuration
-        config_dict = {config['id']: config for config in config_list}
+        config_lst = [config['id']: config for config in config_list]
         
-        return config_dict
+        return config_lst
 
     except FileNotFoundError:
         print(f"Error: The file '{file_path}' was not found.")
@@ -36,13 +36,10 @@ def load_led_bars_config(file_path):
         print(f"Error: {e}")
         return {}
     
-def init_bars(config):
+def init_bars(config_lst):
     bars = []
     iter = 0
-    print(config)
-    for bar in config:
-        if iter != int(bar.id):
-            raise ValueError(f"Bar IDs misaligned!")
+    for config in config_lst:
         bars[int(config.id)] = PixelStrip(config.number_of_leds, config.pin, LED_FREQ, DMA_CHANNEL, False, 255, config.pwm_channel)
         bars[int(config.id)].begin()
     print("Bars initialized sucessfully!")
