@@ -1,12 +1,12 @@
 import time
-from rpi_ws281x import PixelStrip, Color
+#from rpi_ws281x import PixelStrip, Color
 import json
 
 LED_FREQ = 800000
 MA_SMOOTHING = 0.05
 DMA_CHANNEL = 10
 #PWM channels are only 0 and 1 avalibale on respectively GPIO 12 and 13
-
+'''
 current_ma = {}
 
 def load_led_bars_config(file_path):
@@ -42,13 +42,12 @@ def load_led_bars_config(file_path):
     
 def init_bars(config_lst):
     bars = []
-    bars.append(PixelStrip(144, 12, LED_FREQ, DMA_CHANNEL, False, 255, 0))
-    '''iter = 0
+    iter = 0
     for config in config_lst:
         if config:  # Make sure config is not None (in case there are gaps in IDs)
             bars.append(PixelStrip(config['number_of_leds'], config['gpio'], LED_FREQ, DMA_CHANNEL, False, 255, config['pwm_channel']))
             bars[-1].begin()  # Begin for the latest added strip
-    print("Bars initialized sucessfully!")'''
+    print("Bars initialized sucessfully!")
     return bars
 
 def set_brightness_and_color(strip, brightness, color):
@@ -56,7 +55,7 @@ def set_brightness_and_color(strip, brightness, color):
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, Color(color[0], color[1], color[2]))
     strip.show()
-'''
+
 def visualize_beat(frequency, magnitudes, bar, color, sensitivity):
 
     Visualizes the beat at a given frequency by lighting up the LED strip if the magnitude at the frequency bin

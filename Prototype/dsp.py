@@ -1,7 +1,7 @@
 import numpy as np
 import sounddevice as sd
 import time
-from visuals import init_bars,load_led_bars_config,set_brightness_and_color
+#from visuals import init_bars,load_led_bars_config,set_brightness_and_color
 
 ## Define parameters
 fs = 44100  # Sample rate
@@ -22,7 +22,7 @@ def print_average_time():
 
 # Function to run FFT visualization
 def run_fft_visualization():
-    bars = init_bars(load_led_bars_config('visualsConfig.json'))
+    #bars = init_bars(load_led_bars_config('visualsConfig.json'))
 
     # Create a figure for the plot
     freqs = np.fft.rfftfreq(buffer_size, d=1/fs)  # Frequency axis
@@ -58,8 +58,8 @@ def run_fft_visualization():
         bin_magnitudes = magnitude[bin_indices]
 
         #TODO: Put in function that takes in the param 
-        if bin_magnitudes[0] > 20:
-            set_brightness_and_color(bars[0], min(((bin_magnitudes[0] / 40) * 255), 255), (0, 0, 255))
+        #if bin_magnitudes[0] > 20:
+            #set_brightness_and_color(bars[0], min(((bin_magnitudes[0] / 40) * 255), 255), (0, 0, 255))
         # Print the magnitudes for the selected frequency bins
         print("\r", end='')  # Carriage return to overwrite the line
         for mag in bin_magnitudes:
