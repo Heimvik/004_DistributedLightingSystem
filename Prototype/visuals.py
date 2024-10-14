@@ -41,16 +41,17 @@ def load_led_bars_config(file_path):
         return {}
     
 def init_bars(config_lst):
-    bars = []
+    bar = PixelStrip(144, 18, LED_FREQ, DMA_CHANNEL, False, 255, 0)
+    bar.begin()
     iter = 0
     print(config_lst)
-    for config in config_lst:
+    '''for config in config_lst:
         if config:  # Make sure config is not None (in case there are gaps in IDs)
             bars.append(PixelStrip(144, 18, LED_FREQ, DMA_CHANNEL, False, 255, 0))
     for i in range(len(bars)):
         bars[i].begin()
-        print(f"Bar {i} initialized sucessfully!")
-    return bars
+        print(f"Bar {i} initialized sucessfully!")'''
+    return bar
 
 def set_brightness_and_color(strip, brightness, color):
     strip.setBrightness(brightness)
