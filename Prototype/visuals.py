@@ -39,6 +39,7 @@ def load_led_bars_config(file_path):
 def init_bars(config):
     bars = []
     iter = 0
+    print(config)
     for bar in config:
         if iter != int(bar.id):
             raise ValueError(f"Bar IDs misaligned!")
