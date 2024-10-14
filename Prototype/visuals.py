@@ -43,6 +43,7 @@ def load_led_bars_config(file_path):
 def init_bars(config_lst):
     bars = []
     iter = 0
+    print(config_lst)
     for config in config_lst:
         if config:  # Make sure config is not None (in case there are gaps in IDs)
             bars.append(PixelStrip(config['number_of_leds'], config['gpio'], LED_FREQ, DMA_CHANNEL, False, 255, config['pwm_channel']))
