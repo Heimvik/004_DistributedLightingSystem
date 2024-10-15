@@ -67,7 +67,7 @@ def run_fft_visualization():
         print()  # Newline for the next row
 
     # Create an audio stream
-    stream = sd.InputStream(callback=audio_callback, channels=1, samplerate=fs, blocksize=buffer_size, device='combined_sink.monitor')
+    stream = sd.InputStream(callback=audio_callback, channels=1, samplerate=fs, blocksize=buffer_size)
 
     # Start the audio stream
     with stream:
