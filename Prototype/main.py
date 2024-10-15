@@ -4,7 +4,7 @@ import subprocess
 import threading
 
 def run_librespot():
-    command = ['./librespot/target/release/librespot']#, '--name', 'PLserver', '--device', 'default']
+    command = ['./librespot/target/release/librespot', '--name', 'PLserver', '--device', 'default']
     subprocess.run(command)
 
 def main():
