@@ -331,3 +331,5 @@ pactl load-module module-loopback source=combined_sink.monitor sink=alsa_output.
 pactl load-module module-loopback source=combined_sink.monitor sink=alsa_output.platform-snd_aloop.0.analog-stereo
 
 pactl set-default-sink combined_sink
+
+#Current problem sudo needed for lights, but sudo not working with PLserver
